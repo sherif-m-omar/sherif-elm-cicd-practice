@@ -1,5 +1,5 @@
 import unittest
-from app.server import get_version, get_status
+from ./app.server import get_version, get_status
 
 
 class TestPulse(unittest.TestCase):
