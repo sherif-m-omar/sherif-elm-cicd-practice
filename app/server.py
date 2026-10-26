@@ -9,7 +9,7 @@ def get_version():
 
 
 def get_status():
-    return 200
+    return 503
 
 
 class PulseHandler(BaseHTTPRequestHandler):
