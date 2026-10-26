@@ -1,0 +1,41 @@
+name: Pulse HTTP Integration
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  http-integration:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Start API
+        run: |
+          python -m app.server > server.log 2>&1 &
+
+          curl --retry 10 \
+               --retry-delay 1 \
+               --retry-connrefused \
+               -fsS http://127.0.0.1:8000/version
+
+      - name: HTTP Integration Test
+        run: |
+          python -m unittest discover \
+            -s integration \
+            -p 'test_http.py' \
+            -v
